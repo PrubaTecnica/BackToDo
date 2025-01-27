@@ -1,9 +1,27 @@
 import { PrismaClient } from '@prisma/client';
+import Cors from 'cors';
+
+const cors = Cors({
+  methods: ['PUT', 'DELETE', 'HEAD'],
+});
+
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
+}
 
 const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   const { id } = req.query;
+
+  await runMiddleware(req, res, cors);
 
   if (req.method === 'PUT') {
     const { title, description, completed } = req.body;

@@ -1,8 +1,26 @@
 import { PrismaClient } from '@prisma/client';
+import Cors from 'cors';
+
+const cors = Cors({
+  methods: ['GET', 'POST', 'HEAD'],
+});
+
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
+}
 
 const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
+  await runMiddleware(req, res, cors);
+
   if (req.method === 'GET') {
     try {
       const tasks = await prisma.task.findMany();
