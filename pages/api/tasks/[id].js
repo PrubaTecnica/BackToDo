@@ -16,20 +16,20 @@ export default async function handler(req, res) {
       res.status(200).json(updatedTask);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Error al actualizar la tarea' });
+      res.status(500).json({ error: 'Error updating task' });
     }
   } else if (req.method === 'DELETE') {
     try {
       await prisma.task.delete({
         where: { id: parseInt(id) },
       });
+      res.status(200).json({ message: 'Task deleted successfully' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Error al eliminar la tarea' });
-      res.status(500).json({ error: 'Error al eliminar la tarea' });
+      res.status(500).json({ error: 'Error deleting task' });
     }
   } else {
     res.setHeader('Allow', ['PUT', 'DELETE']);
-    res.status(405).end(`Método ${req.method} no permitido`);
+    res.status(405).end(`Method ${req.method} not allowed`);
   }
 }

@@ -9,13 +9,13 @@ export default async function handler(req, res) {
       res.status(200).json(tasks);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Error al obtener las tareas' });
+      res.status(500).json({ error: 'Error fetching tasks' });
     }
   } else if (req.method === 'POST') {
     const { title, description } = req.body;
 
     if (!title || !description) {
-      return res.status(400).json({ error: 'El título y la descripción son obligatorios' });
+      return res.status(400).json({ error: 'Title and description are required' });
     }
 
     try {
@@ -25,10 +25,10 @@ export default async function handler(req, res) {
       res.status(201).json(newTask);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Error al crear la tarea' });
+      res.status(500).json({ error: 'Error creating task' });
     }
   } else {
     res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Método ${req.method} no permitido`);
+    res.status(405).end(`Method ${req.method} not allowed`);
   }
 }
